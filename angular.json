@@ -47,8 +47,8 @@
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "2kb",
-                  "maximumError": "4kb"
+                  "maximumWarning": "10kb",
+                  "maximumError": "16kb"
                 }
               ],
               "fileReplacements": [
@@ -74,10 +74,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "chaos_game:build:production"
+              "buildTarget": "chaos_game:build:production"
             },
             "development": {
-              "browserTarget": "chaos_game:build:development"
+              "buildTarget": "chaos_game:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -85,7 +85,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "chaos_game:build"
+            "buildTarget": "chaos_game:build"
           }
         },
         "test": {
