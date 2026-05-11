@@ -1,7 +1,65 @@
-<body>
-  <div style="text-align: right;"> <button type="button" style="padding: 2px 18px;" (click)="onClick()">Go</button></div>
-  <div id="container"></div>
-  <div style="text-align: center;">
-    <h2>Points: {{points}}</h2>
+<div class="chaos-app" [class.with-wiki]="wikiOpen">
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo-dot logo-dot--a"></span>
+      <span class="logo-dot logo-dot--b"></span>
+      <span class="logo-dot logo-dot--c"></span>
+      <h1>The Chaos Game</h1>
+    </div>
+    <p class="subtitle">Click anywhere on the canvas to drop a seed, then press <em>Run</em> to watch the Sierpiński fractal emerge.</p>
+  </header>
+
+  <div class="stage-wrap">
+    <div id="container" class="stage"></div>
+
+    <div class="hud">
+      <div class="stat">
+        <span class="stat-label">Points plotted</span>
+        <span class="stat-value">{{ points | number }}</span>
+      </div>
+      <div class="actions">
+        <button type="button" class="btn btn--primary" (click)="onClick()" [disabled]="running">
+          <span class="btn-glow"></span>
+          {{ running ? 'Running…' : 'Run' }}
+        </button>
+        <button type="button" class="btn btn--ghost" (click)="onReset()">Reset</button>
+      </div>
+    </div>
   </div>
-</body>
+
+  <footer class="app-foot" style="text-align: center;">
+    <span class="app-foot__dot"></span>
+    Crafted by
+    <a class="app-foot__name"
+       href="https://github.com/HasnatPranto"
+       target="_blank"
+       rel="noopener noreferrer">Hasnat</a>
+    <span class="app-foot__sep">·</span>
+    <span class="app-foot__muted">Sierpiński chaos game · 2022</span>
+  </footer>
+</div>
+
+<button type="button"
+        class="wiki-toggle"
+        [class.is-open]="wikiOpen"
+        (click)="toggleWiki()"
+        [attr.aria-label]="wikiOpen ? 'Close wiki sidebar' : 'Open wiki sidebar'">
+  <span class="wiki-toggle__icon">{{ wikiOpen ? '›' : 'i' }}</span>
+  <span class="wiki-toggle__text">Wiki</span>
+</button>
+
+<aside class="wiki-panel" [class.is-open]="wikiOpen" aria-hidden="false">
+  <div class="wiki-panel__body">
+    <iframe
+      *ngIf="wikiOpen"
+      class="wiki-frame"
+      [src]="wikiSafeUrl"
+      title="The Chaos Game article"
+      referrerpolicy="no-referrer"
+      sandbox="allow-same-origin allow-popups allow-popups-to-escape-sandbox"></iframe>
+  </div>
+
+  <footer class="wiki-panel__foot">
+    Source: <a [href]="wikiUrl" target="_blank" rel="noopener noreferrer">{{ wikiSourceLabel }}</a> · © Boston University
+  </footer>
+</aside>
