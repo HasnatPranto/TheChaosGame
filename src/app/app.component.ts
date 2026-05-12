@@ -218,7 +218,11 @@ export class AppComponent implements AfterViewInit, OnDestroy {
 
   onClick(): void {
     if (this.running) return;
-    if (!this.currentPoint) {
+    const seed = this.currentPoint;
+    this.onReset();
+    if (seed) {
+      this.setSeed(seed.x, seed.y);
+    } else {
       const w = this.stage.width();
       const h = this.stage.height();
       this.setSeed(w / 2, h / 2 + 40);
@@ -226,19 +230,19 @@ export class AppComponent implements AfterViewInit, OnDestroy {
 
     this.running = true;
     const token = ++this.runToken;
-    const total = 299;
+    const total = 250;
     this.runDemo(total, total, token, () => this.startBulkPlotting(token));
   }
 
   // Hold + gap timings (in ms) tier by tier — gradually accelerates after milestones.
-  private demoTimings(stepIndex: number): { hold: number; gap: number; ringDur: number } {
-    if (stepIndex < 10)  return { hold: 650, gap: 350, ringDur: 0.35 };
-    if (stepIndex < 25)  return { hold: 380, gap: 180, ringDur: 0.25 };
-    if (stepIndex < 50)  return { hold: 200, gap: 90,  ringDur: 0.18 };
-    if (stepIndex < 75)  return { hold: 110, gap: 40,  ringDur: 0.12 };
-    if (stepIndex < 150) return { hold: 60,  gap: 20,  ringDur: 0.08 };
-    return { hold: 30,  gap: 10,  ringDur: 0.05 };
-  }
+ private demoTimings(stepIndex: number) {
+
+  return {
+    hold: Math.max(15, 650 * Math.exp(-stepIndex / 45)),
+    gap: Math.max(5, 350 * Math.exp(-stepIndex / 40)),
+    ringDur: Math.max(0.03, 0.35 * Math.exp(-stepIndex / 60)),
+  };
+}
 
   private runDemo(stepsLeft: number, total: number, token: number, onDone: () => void): void {
     if (token !== this.runToken) return;
